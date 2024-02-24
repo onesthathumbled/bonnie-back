@@ -135,6 +135,8 @@ GEM
     nokogiri (1.14.0-x64-mingw-ucrt)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    paranoia (2.6.3)
+      activerecord (>= 5.1, < 7.2)
     pg (1.4.5)
     puma (5.6.5)
       nio4r (~> 2.0)
@@ -221,6 +223,7 @@ DEPENDENCIES
   devise
   devise-jwt
   jsonapi-serializer
+  paranoia
   pg (~> 1.1)
   puma (~> 5.0)
   rack-cors
