@@ -19,20 +19,21 @@ class Api::V1::TasksController < ApplicationController
 
     def create
         @task = @category.tasks.build(task_params)
+
         if @task.save
-
+            render json: @task
         else
-
+            render json: { error: "Failed to create task" }, status: :unprocessable_entity
         end
     end
 
     def edit
-
+        
     end
 
     def update
         if @task.update(task_params)
-
+            render json: @task
         else
 
         end

@@ -10,6 +10,10 @@ class Api::V1::CurrentUserController < ApplicationController
     # }
   end
 
+  def all
+    render json: @tasks
+  end
+
   private
 
   def set_user_data

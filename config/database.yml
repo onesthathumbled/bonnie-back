@@ -23,6 +23,7 @@ default: &default
   hostname: localhost
   username: postgres
   password: temp123456
+  timezone: "Asia/Manila"
 
 development:
   <<: *default
