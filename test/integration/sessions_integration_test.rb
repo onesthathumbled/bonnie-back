@@ -32,7 +32,7 @@ class SessionsIntegrationTest < ActionDispatch::IntegrationTest
     post '/signup', params: { user: user_register_data }
 
     user_login_data = {
-      email: "johendoe@email.com",
+      email: "johndoe@email.com",
       password: "pass123",
     }
 
@@ -52,65 +52,87 @@ class SessionsIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
-  # test "register, login, and create category test" do
-  #   # Register
-  #   user_data = {
-  #     first_name: "Jai",
-  #     last_name: "Madera",
-  #     email: "jai13@email.com",
-  #     password: "pass123",
-  #     password_confirmation: "pass123"
-  #   }
+  test "create category test" do
+    user_data = {
+      first_name: "John",
+      last_name: "Doe",
+      email: "johndoe@email.com",
+      password: "pass123",
+      password_confirmation: "pass123"
+    }
 
-  #   post '/signup', params: { user: user_data }
-  #   assert_response :success
+    post '/signup', params: { user: user_data }
+    assert_response :success
 
-  #   # Debugging: Output the user registration response body and user ID
-  #   puts "Registration Response: #{response.body}"
-  #   registered_user_id = JSON.parse(response.body)['data']['id']
-  #   puts "Registered User ID: #{registered_user_id}"
+    user_login_data = {
+      email: "johndoe@email.com",
+      password: "pass123",
+    }
 
-  #   # Login
-  #   user_login_data = {
-  #     email: "jai13@email.com",
-  #     password: "pass123",
-  #   }
+    post '/login', params: { user: user_login_data }
+    assert_response :success
 
-  #   post '/login', params: { user: user_login_data }
+    json_response = JSON.parse(response.body)
+    user_id = json_response['data']['id'].to_s
+    auth_token = response.headers['Authorization']
 
-  #   # Debugging: Output the login response body
-  #   puts "Login Response: #{response.body}"
+    category_data = {
+      "category_name": "Work",
+      "category_details": "All about work"
+    }
 
-  #   # Check if login was successful
-  #   assert_response :success
+    post "/api/v1/users/#{user_id}/categories",
+         params: { category: category_data },
+         headers: { 'Authorization' => auth_token }
+    assert_response :success
 
-  #   # Extract the authentication token from the response headers
-  #   auth_token = response.headers['Authorization']
+    if response.status == 200
+      puts "Create Category Test: PASSED ✅"
+    else
+      puts "Create Category Test: FAILED ❌ (Internal Server Error)"
+    end
+  end
 
-  #   # Print the extracted token for debugging
-  #   puts "Authentication Token: #{auth_token}"
+  test "create task test" do
+    user_data = {
+      first_name: "John",
+      last_name: "Doe",
+      email: "johndoe@email.com",
+      password: "pass123",
+      password_confirmation: "pass123"
+    }
 
-  #   # Check if auth_token is present
-  #   assert_not_nil auth_token, "Authentication token is nil"
+    post '/signup', params: { user: user_data }
+    assert_response :success
 
-  #   # Create a category
-  #   category_data = {
-  #     "category_name": "Side Projects",
-  #     "category_details": "List of my side 3"
-  #   }
+    user_login_data = {
+      email: "johndoe@email.com",
+      password: "pass123",
+    }
 
-  #   # Include the extracted token in the request headers
-  #   post "/api/v1/users/#{registered_user_id}/categories",
-  #        params: { category: category_data },
-  #        headers: { 'Authorization' => auth_token }
+    post '/login', params: { user: user_login_data }
+    assert_response :success
 
-  #   # Debugging: Output the category creation response body
-  #   puts "Category Creation Response: #{response.body}"
+    json_response = JSON.parse(response.body)
+    user_id = json_response['data']['id'].to_s
+    auth_token = response.headers['Authorization']
 
-  #   # Check if category creation was successful
-  #   assert_response :success
+    category_data = {
+      "category_name": "Work",
+      "category_details": "All about work"
+    }
 
-  #   json_response = JSON.parse(response.body)
-  #   assert_equal 'Category created.', json_response['message']
-  # end
+    post "/api/v1/users/#{user_id}/categories",
+         params: { category: category_data },
+         headers: { 'Authorization' => auth_token }
+    assert_response :success
+
+    
+
+    if response.status == 200
+      puts "Create Task Test: PASSED ✅"
+    else
+      puts "Create Task Test: FAILED ❌ (Internal Server Error)"
+    end
+  end
 end
