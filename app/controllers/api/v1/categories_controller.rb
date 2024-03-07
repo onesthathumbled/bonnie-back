@@ -20,9 +20,7 @@ class Api::V1::CategoriesController < ApplicationController
     def create
         @category = @user.categories.build(category_params)
         if @category.save
-            render json: {
-                message: 'Category created.'
-            }
+            render json: @category
         else
             render json: 'Error'
         end
