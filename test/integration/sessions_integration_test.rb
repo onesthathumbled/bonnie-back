@@ -200,4 +200,67 @@ class SessionsIntegrationTest < ActionDispatch::IntegrationTest
       puts "Create Task Test: FAILED ❌ (Internal Server Error)"
     end
   end
+
+  # Delete Task Test
+  test "delete task test" do
+    user_data = {
+      first_name: "John",
+      last_name: "Doe",
+      email: "johndoe@email.com",
+      password: "pass123",
+      password_confirmation: "pass123"
+    }
+
+    post '/signup', params: { user: user_data }
+    assert_response :success
+
+    user_login_data = {
+      email: "johndoe@email.com",
+      password: "pass123",
+    }
+
+    post '/login', params: { user: user_login_data }
+    assert_response :success
+
+    json_response = JSON.parse(response.body)
+    user_id = json_response['data']['id'].to_s
+    auth_token = response.headers['Authorization']
+
+    category_data = {
+      "category_name": "Work",
+      "category_details": "All about work"
+    }
+
+    post "/api/v1/users/#{user_id}/categories",
+         params: { category: category_data },
+         headers: { 'Authorization' => auth_token }
+    assert_response :success
+
+    category_response = JSON.parse(response.body)
+    category_id = category_response['id'].to_s
+   
+    task_data = {
+      task_name: "Make a Stock Trading App",
+      task_details: "Details of stock trading app.",
+      priority: "high",
+    }
+
+    post "/api/v1/users/#{user_id}/categories/#{category_id}/tasks",
+         params: { task: task_data },
+         headers: { 'Authorization' => auth_token }
+    assert_response :success
+
+    task_response = JSON.parse(response.body)
+    task_id = task_response['id'].to_s
+
+    delete "/api/v1/users/#{user_id}/categories/#{category_id}/tasks/#{task_id}",
+         headers: { 'Authorization' => auth_token }
+    assert_response :success
+  
+    if response.status == 204
+      puts "Delete Task Test: PASSED ✅"
+    else
+      puts "Delete Task Test: FAILED ❌ (Internal Server Error)"
+    end
+  end
 end
