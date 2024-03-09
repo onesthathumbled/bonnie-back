@@ -1,11 +1,10 @@
 class Api::V1::CategoriesController < ApplicationController
-    before_action :authenticate_user!
     before_action :set_user
     before_action :set_category, only: %i[show edit update destroy]
 
 
     def index
-        @categories = @user.categories.all
+        @categories = @user.categories
         render json: @categories
     end
 
@@ -22,7 +21,7 @@ class Api::V1::CategoriesController < ApplicationController
         if @category.save
             render json: @category
         else
-            render json: 'Error'
+            render json: { error: "Failed to create category" }, status: :unprocessable_entity
         end
     end
 
@@ -32,9 +31,9 @@ class Api::V1::CategoriesController < ApplicationController
 
     def update
         if @category.update(category_params)
-
+            render json: @category
         else
-
+            render json: { error: "Failed to create task" }, status: :unprocessable_entity
         end
     end
 
@@ -45,7 +44,7 @@ class Api::V1::CategoriesController < ApplicationController
     private
 
     def set_user
-        @user = User.find(params[:user_id])
+        @user = current_user
     end
 
     def set_category

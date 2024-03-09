@@ -6,6 +6,7 @@ class User < ApplicationRecord
          :validatable, :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_many :categories
+  has_many :tasks, through: :categories
 
   validates :email, presence: true, uniqueness: true
   validates :encrypted_password, presence: true

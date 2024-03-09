@@ -14,11 +14,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/current_user', to: 'current_user#index'
       get '/all_tasks', to: 'current_user#all'
-      resources :users do
+      # resources :users do
         resources :categories do
           resources :tasks
         end
-      end
+      # end
     end
   end
 

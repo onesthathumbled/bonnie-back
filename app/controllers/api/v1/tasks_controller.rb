@@ -1,11 +1,10 @@
 class Api::V1::TasksController < ApplicationController
-    before_action :authenticate_user!
     before_action :set_user
     before_action :set_category
     before_action :set_task, only: %i[show edit update destroy]
 
     def index
-        @tasks = @category.tasks.all
+        @tasks = @category.tasks
         render json: @tasks
     end
 
@@ -35,7 +34,7 @@ class Api::V1::TasksController < ApplicationController
         if @task.update(task_params)
             render json: @task
         else
-
+            render json: { error: "Failed to update task" }, status: :unprocessable_entity
         end
     end
 
@@ -46,7 +45,8 @@ class Api::V1::TasksController < ApplicationController
     private
 
     def set_user
-        @user = User.find(params[:user_id])
+        # @user = User.find(params[:user_id])
+        @user = current_user
     end
 
     def set_category
