@@ -15,6 +15,7 @@ class Api::V1::CurrentUserController < ApplicationController
 
   private
 
+  # Current user
   def set_user_data
     @user = current_user
     @categories = @user.categories
