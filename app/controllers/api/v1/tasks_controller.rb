@@ -38,6 +38,7 @@ class Api::V1::TasksController < ApplicationController
         end
     end
 
+    # Soft deletion
     def destroy
         @task.destroy
     end

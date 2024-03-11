@@ -37,6 +37,7 @@ class Api::V1::CategoriesController < ApplicationController
         end
     end
 
+    # Soft deletion
     def destroy
         @category.destroy
     end
